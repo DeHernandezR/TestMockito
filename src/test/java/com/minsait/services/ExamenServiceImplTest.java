@@ -37,7 +37,7 @@ class ExamenServiceImplTest {
 
     @Test
     void testArgumentCaptor() {
-        when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        //when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         when(preguntasRepository.findPreguntasByExamenId(anyLong())).thenReturn(Datos.PREGUNTAS);
 
         service.findExamenPorNombreConPreguntas("Matematicas");
@@ -114,7 +114,24 @@ class ExamenServiceImplTest {
         );
     }
 
+    @Test
+    void TestSaveSinPreguntas() {
+        Examen examen = Datos.EXAMEN;
+        when(examenRepository.save(examen)).thenReturn(examen);
 
+        Examen examenTest = service.save(examen);
+        assertTrue(examenTest.getPreguntas().isEmpty());
+    }
+
+    @Test
+    void TestSaveConPreguntas() {
+        Examen examen = Datos.EXAMEN;
+        when(examenRepository.save(examen)).thenReturn(examen);
+
+        Examen examenTest = service.save(examen);
+        examenTest.setPreguntas(Datos.PREGUNTAS);
+        assertFalse(examenTest.getPreguntas().isEmpty());
+    }
 
     /*
     Probar que se guarde el examen con preguntas y sin preguntas
